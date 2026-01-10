@@ -1,0 +1,83 @@
+package com.api.prod.service;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
+
+import com.api.prod.model.Protocol;
+import com.api.prod.repository.ProtocolRepository;
+
+@Service
+public class ProtocolService {
+
+    private final ProtocolRepository repository;
+    private final RestTemplate restTemplate;
+
+    @Value("${n8n.webhook.url}")
+    private String n8nWebhookUrl;
+
+    public ProtocolService(ProtocolRepository repository) {
+        this.repository = repository;
+        this.restTemplate = new RestTemplate();
+    }
+
+    // =========================
+    // POST → n8n
+    // =========================
+    public void callN8n(Long protocol) {
+
+        Protocol entity = getByProtocol(protocol);
+
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("protocol", entity.getProtocol());
+        payload.put("title", entity.getTitle());
+        payload.put("description", entity.getDescription());
+        payload.put("devDays", entity.getDevDays());
+        payload.put("workload", entity.getWorkload());
+        payload.put("savings", entity.getSavings());
+
+        restTemplate.postForEntity(
+            n8nWebhookUrl,
+            payload,
+            String.class
+        );
+    }
+
+
+    // =========================
+    // GET por protocol
+    // =========================
+    public Protocol getByProtocol(Long protocol) {
+        return repository.findByProtocol(protocol)
+                .orElseThrow(() ->
+                    new RuntimeException("Protocolo não encontrado")
+                );
+    }
+
+    // =========================
+    // UPDATE por protocol
+    // =========================
+    @Transactional
+    public Protocol updateByProtocol(Long protocol, Protocol data) {
+
+        Protocol entity = getByProtocol(protocol);
+
+        entity.setTitle(data.getTitle());
+        entity.setDescription(data.getDescription());
+        entity.setDevDays(data.getDevDays());
+        entity.setSupposedEnd(data.getSupposedEnd());
+        entity.setWorkload(data.getWorkload());
+        entity.setSavings(data.getSavings());
+
+        return repository.save(entity);
+    }
+    
+    public void deleteByProtocol(Long protocol) {
+        Protocol entity = getByProtocol(protocol);
+        repository.delete(entity);
+    }
+}
