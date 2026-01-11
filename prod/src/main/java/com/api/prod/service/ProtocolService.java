@@ -1,6 +1,7 @@
 package com.api.prod.service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -10,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.api.prod.model.Protocol;
 import com.api.prod.repository.ProtocolRepository;
+
 
 @Service
 public class ProtocolService {
@@ -79,5 +81,9 @@ public class ProtocolService {
     public void deleteByProtocol(Long protocol) {
         Protocol entity = getByProtocol(protocol);
         repository.delete(entity);
+    }
+
+    public List<Protocol> getAll() {
+        return repository.findAll();
     }
 }

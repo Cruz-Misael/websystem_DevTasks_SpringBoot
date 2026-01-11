@@ -1,5 +1,6 @@
 package com.api.prod.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
@@ -75,6 +76,11 @@ public class ProtocolController {
         return ResponseEntity.ok(
             Map.of("status", "deleted", "protocol", protocol)
         );
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Protocol>> getAll() {
+        return ResponseEntity.ok(service.getAll());
     }
 
 }
