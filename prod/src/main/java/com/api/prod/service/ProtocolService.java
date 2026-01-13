@@ -42,12 +42,22 @@ public class ProtocolService {
         payload.put("workload", entity.getWorkload());
         payload.put("savings", entity.getSavings());
 
-        restTemplate.postForEntity(
-            n8nWebhookUrl,
-            payload,
-            String.class
-        );
+        System.out.println("=== ENVIANDO AO N8N ===");
+        System.out.println("URL: " + n8nWebhookUrl);
+        System.out.println("PAYLOAD: " + payload);
+
+        try {
+            restTemplate.postForEntity(
+                n8nWebhookUrl,
+                payload,
+                String.class
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
+
 
 
     // =========================
@@ -68,15 +78,33 @@ public class ProtocolService {
 
         Protocol entity = getByProtocol(protocol);
 
-        entity.setTitle(data.getTitle());
-        entity.setDescription(data.getDescription());
-        entity.setDevDays(data.getDevDays());
-        entity.setSupposedEnd(data.getSupposedEnd());
-        entity.setWorkload(data.getWorkload());
-        entity.setSavings(data.getSavings());
+        if (data.getTitle() != null) {
+            entity.setTitle(data.getTitle());
+        }
+
+        if (data.getDescription() != null) {
+            entity.setDescription(data.getDescription());
+        }
+
+        if (data.getDevDays() != null) {
+            entity.setDevDays(data.getDevDays());
+        }
+
+        if (data.getSupposedEnd() != null) {
+            entity.setSupposedEnd(data.getSupposedEnd());
+        }
+
+        if (data.getWorkload() != null) {
+            entity.setWorkload(data.getWorkload());
+        }
+
+        if (data.getSavings() != null) {
+            entity.setSavings(data.getSavings());
+        }
 
         return repository.save(entity);
     }
+
     
     public void deleteByProtocol(Long protocol) {
         Protocol entity = getByProtocol(protocol);
