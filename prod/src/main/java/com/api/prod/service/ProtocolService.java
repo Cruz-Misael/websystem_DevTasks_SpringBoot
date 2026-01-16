@@ -30,33 +30,33 @@ public class ProtocolService {
     // =========================
     // POST → n8n
     // =========================
-    public void callN8n(Long protocol) {
+public void callN8n(Long protocol) {
 
-        Protocol entity = getByProtocol(protocol);
+    Protocol entity = getByProtocol(protocol);
 
-        Map<String, Object> payload = new HashMap<>();
-        payload.put("protocol", entity.getProtocol());
-        payload.put("title", entity.getTitle());
-        payload.put("description", entity.getDescription());
-        payload.put("devDays", entity.getDevDays());
-        payload.put("workload", entity.getWorkload());
-        payload.put("savings", entity.getSavings());
+    Map<String, Object> payload = new HashMap<>();
+    payload.put("protocol", entity.getProtocol());
+    payload.put("title", entity.getTitle());
+    payload.put("description", entity.getDescription());
+    payload.put("devDays", entity.getDevDays());
+    payload.put("workload", entity.getWorkload());
+    payload.put("savings", entity.getSavings());
 
-        System.out.println("=== ENVIANDO AO N8N ===");
-        System.out.println("URL: " + n8nWebhookUrl);
-        System.out.println("PAYLOAD: " + payload);
+    System.out.println("=== ENVIANDO AO N8N ===");
+    System.out.println("URL: " + n8nWebhookUrl);
+    System.out.println("PAYLOAD: " + payload);
 
-        try {
-            restTemplate.postForEntity(
-                n8nWebhookUrl,
-                payload,
-                String.class
-            );
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
-        }
+    try {
+        restTemplate.postForEntity(
+            n8nWebhookUrl,
+            payload,
+            String.class
+        );
+    } catch (Exception e) {
+        e.printStackTrace();
+        throw e;
     }
+}
 
 
 
@@ -90,6 +90,10 @@ public class ProtocolService {
             entity.setDevDays(data.getDevDays());
         }
 
+        if (data.getSupposedStart() != null) {
+            entity.setSupposedStart(data.getSupposedStart());
+        }
+
         if (data.getSupposedEnd() != null) {
             entity.setSupposedEnd(data.getSupposedEnd());
         }
@@ -104,6 +108,7 @@ public class ProtocolService {
 
         return repository.save(entity);
     }
+
 
     
     public void deleteByProtocol(Long protocol) {

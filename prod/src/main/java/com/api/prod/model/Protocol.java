@@ -40,6 +40,10 @@ public class Protocol {
     @Column(name = "supposed_end")
     private LocalDate supposedEnd;
 
+    @Column(name = "supposed_start")
+    private LocalDate supposedStart;
+
+
     @Column(name = "workload")
     private Integer workload;
 
@@ -99,6 +103,14 @@ public class Protocol {
 
     public void setSupposedEnd(LocalDate supposedEnd) {
         this.supposedEnd = supposedEnd;
+    }
+
+    public LocalDate getSupposedStart() {
+        return supposedStart;
+    }
+
+    public void setSupposedStart(LocalDate supposedStart) {
+        this.supposedStart = supposedStart;
     }
 
     public Integer getWorkload() {
