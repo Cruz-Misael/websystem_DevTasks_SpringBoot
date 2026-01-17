@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -27,11 +29,7 @@ public class Protocol {
     private String title;
 
     @Lob
-    @Column(
-        name = "description",
-        columnDefinition = "LONGTEXT",
-        nullable = false
-    )
+    @Column(name = "description", columnDefinition = "LONGTEXT", nullable = false)
     private String description;
 
     @Column(name = "dev_days")
@@ -43,23 +41,20 @@ public class Protocol {
     @Column(name = "supposed_start")
     private LocalDate supposedStart;
 
-
     @Column(name = "workload")
     private Integer workload;
 
     @Column(name = "savings", precision = 15, scale = 2)
     private BigDecimal savings;
 
-    @Column(
-        name = "created_at",
-        insertable = false,
-        updatable = false
-    )
+    @Enumerated(EnumType.STRING)
+    @Column(name = "analyzed_status", length = 100)
+    private AnalyzedStatus analyzedStatus;
+
+    @Column(name = "created_at", insertable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    // =========================
-    // Getters and Setters
-    // =========================
+    // Getters e Setters
 
     public Long getId() {
         return id;
@@ -131,5 +126,13 @@ public class Protocol {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    public AnalyzedStatus getAnalyzedStatus() {
+        return analyzedStatus;
+    }
+
+    public void setAnalyzedStatus(AnalyzedStatus analyzedStatus) {
+        this.analyzedStatus = analyzedStatus;
     }
 }
